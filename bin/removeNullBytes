@@ -1,0 +1,34 @@
+#!/usr/bin/python2.7
+
+import argparse
+
+from sanio.readers import FileReader
+from sanio.writers import FileWriter
+from sanio.cleaners import FuncCleaner, StringCleaner
+
+
+# --------------------------------------------------
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Save a copy of the input file with NULL bytes removed.')
+    parser.add_argument('-i', '--infile', required=True, help='path to input file')
+    parser.add_argument('-o', '--outfile', default='outfile.txt', help='path to output file')
+    parser.add_argument('-v', '--verbose', action='store_true')
+
+    args = parser.parse_args()
+
+    #
+    if args.verbose:
+        print("Starting...")
+        print("  infile: {s}".format(s=args.infile))
+        print("  outfile: {s}".format(s=args.outfile))
+        print("")
+
+    if args.infile is None or args.outfile is None:
+        parser.print_help()
+
+    else:
+        FileWriter(
+            reader=FileReader(args.infile, verbose=args.verbose),
+            cleaner=FuncCleaner(StringCleaner.remove_null_bytes),
+            verbose=args.verbose
+        ).save(args.outfile)
