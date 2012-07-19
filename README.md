@@ -50,13 +50,13 @@ You have a CSV file on disk (`input.csv`), and you'd like a Python dictionary
 instead.  (Yes, Python has `csv.DictReader`, but bear with me -- we'll get to the fun stuff quickly):
 
 ```
-the_data_as_a_dict = CSVReader(reader=FileReader('input.csv'))
+the_data_as_a_dict = CSVReader(data_source=FileReader('input.csv'))
 ```
 
 If your data was online, you might use the (currently fictional) URLReader instead:
 
 ```
-the_data_as_a_dict = CSVReader(reader=URLReader('http://example.com/input.csv'))
+the_data_as_a_dict = CSVReader(data_source=URLReader('http://example.com/input.csv'))
 ```
 
 ### Converting CSV to JSON
@@ -66,9 +66,9 @@ The examples above transformed CSV input into a Python Dictionary in memory.  Th
 ```
 FileWriter(
     'output.json',
-    reader=JSONTransform(
-        reader=CSVReader(
-            reader=FileReader('input.csv')
+    data_source=JSONTransform(
+        data_source=CSVReader(
+            data_source=FileReader('input.csv')
         )
     )
 )
@@ -107,7 +107,7 @@ def company_name_for_ticket_symbol(smbl):
 	return company_name
 
 data = CSVReader(
-	reader=FileReader('numbers.csv'),
+	data_source=FileReader('numbers.csv'),
 	cleaner=FuncMapper(company_name_for_ticket_symbol)
 )
 ```
@@ -125,7 +125,7 @@ Example dealing with NULL byte errors:
 
 ```
 data = CSVReader(
-		reader=FileReader('files/SOME_DATA.CSV',
+		data_source=FileReader('files/SOME_DATA.CSV',
 				cleaner=FuncMapper(StringCleaner.remove_null_bytes))
 	)
 ```
@@ -135,7 +135,7 @@ Pull some data from a CSV, but skip lines with an empty 'Price' field:
 
 ```
 data = CSVReader(
-			reader=FileReader('files/SOME_DATA.CSV'),
+			data_source=FileReader('files/SOME_DATA.CSV'),
 			filter=RowFilter('Price', function=StringValidator.is_empty)
 		)
 ```
@@ -144,7 +144,7 @@ Get RSS posts whose titles don't contain the word "links":
 
 ```
 data = RSSReader(
-			reader=URLReader('http://some.blog.foo/feed/'),
+			data_source=URLReader('http://some.blog.foo/feed/'),
 			filter=RowFilter('Title', function=lambda x: x.lower().find('links') < 0)
 		)
 ```
