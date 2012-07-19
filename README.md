@@ -1,28 +1,44 @@
-# Sanio makes your input files sane to work with
-
-THIS IS A WORK IN PROGRESS!!
+**SANIO IS A WORK IN PROGRESS!!** YMMV.
 
 
-## Tool Types
-Sanio feature five types of tools for reformatting and translating input data into something more enjoyable to work with.  These are: Readers, Parsers, Cleaners, Transformers, and Writers:
+## Sanio Tool Chain
+Sanio features a collection of tools for reformatting and translating input data into something more enjoyable to work with.  These include:
 
-### Readers
-Readers know how to obtain data from a particular source (i.e., a file or URL),
-and output said data when iterated over.
+ - Aggregators
+ - Cleaners
+ - Filters
+ - Readers
+ - Transformers
+ - Validators
+ - Writers
+ 
+At the core, every Sanio object is a cleaner, filter, reader, validator, writer, and a data_source (meaning that it will tell you its content when iterated over, or called.)  Because the tools all share common interfaces, they can be chained together; However, some objects are better at certain tasks than others.  For example, instead of letting a FileReader clean itself (which will have no effect), you might connect it to a UTF8 cleaner.
 
-### Parsers
-Parsers are generally 'converters' -- they pull data from a reader, parse it,
-and return the parsed data as a Python Dictionary when iterated over.
+Before we get over our heads, let's start with simple descriptions of each tool type:
+
+### Aggregators
+Aggregators analyze entire rows or columns of data.  They can compute averages, min/max, sums, and other values.  They are generally used to create (or insert) new data based on input data.
 
 ### Cleaners
-Cleaners take function pointers, and map said functions over data via their
-`clean()` method.
+Cleaners manipulate data to ensure a consistent format.  A Cleaner might convert between character encodings, capitalize strings, or simply trim off white-space.
+
+### Filters
+Filters are used to remove rows, columns, or cells of data using the boolean response from a function.
+
+### Mappers
+Mappers map functions to columns or cells.
+
+### Readers
+Readers know how to obtain data from a particular source (i.e., a file or URL), or extract data stored in various formats (i.e., CSV, XML, XLS, etc.), and normalize it for use by other Sanio tools in the chain.
 
 ### Transformers
-Take a Python Dictionary and output a different format (i.e., JSON, XML, etc.)
+Transformers can reshape the data.  They let you change the structure (even if the change is as simple as renaming a column.)
+
+### Validators
+Validators can be used for basic data analysis.  They are easily chained to Filters.
 
 ### Writers
-Writers take data from an iterator and put it somewhere else (i.e., a file, a
+Writers take normalized, Sanio data and put it somewhere else (i.e., a file, a
 socket, etc.)
 
 
@@ -30,17 +46,17 @@ socket, etc.)
 ### Reading a CSV
 Let's start with a simple example:
 
-You have a CSV file on disk ('input.csv'), and you'd like a Python dictionary
-instead.  (Yes, Python has `csv.DictReader`, but this example sets the tone):
+You have a CSV file on disk (`input.csv`), and you'd like a Python dictionary
+instead.  (Yes, Python has `csv.DictReader`, but bear with me -- we'll get to the fun stuff quickly):
 
 ```
-the_data_as_a_dict = CSVParser(reader=FileReader('input.csv'))
+the_data_as_a_dict = CSVReader(reader=FileReader('input.csv'))
 ```
 
-If your data was online, instead of locally, you might use the (currently fictional) URLReader instead:
+If your data was online, you might use the (currently fictional) URLReader instead:
 
 ```
-the_data_as_a_dict = CSVParser(reader=URLReader('http://example.com/input.csv'))
+the_data_as_a_dict = CSVReader(reader=URLReader('http://example.com/input.csv'))
 ```
 
 ### Converting CSV to JSON
@@ -51,30 +67,30 @@ The examples above transformed CSV input into a Python Dictionary in memory.  Th
 FileWriter(
     'output.json',
     reader=JSONTransform(
-        reader=CSVParser(
+        reader=CSVReader(
             reader=FileReader('input.csv')
         )
     )
 )
 ```
 
-You'll notice an interesting pattern here.  Sanio's tools are designed to be patched-together by chaining the input from one tool to the output of another.  This is typically done by passing Sanio tools as readers.
+You'll notice an interesting pattern here.  Sanio's tools are designed to be patched-together by chaining the input from one tool to the output of another.  This is typically done by passing Sanio tools as "readers".
 
 
-### Using Cleaners
+### Using Mappers
 
-Cleaners allow you to manipulate data as it flows through the pipe by mapping functions to data.  There are two main cleaners:  `FuncCleaner` and `FuncDictCleaner`.  FuncCleaner is used to process each field of data through a single function.  It takes a function-pointer on initialization, like this:
+Mappers allow you to manipulate data as it flows through the pipe by mapping functions to data.  There are two main mappers:  `FuncMapper` and `FuncDictMapper`.  FuncMapper is used to process each field of data through a single function.  It takes a function-pointer on initialization, like this:
 
 ```
 FileReader(
     'foo.txt',
-    cleaner=FuncCleaner(my_processing_function)
+    cleaner=FuncMapper(my_processing_function)
 )
 ```
 
-FuncDictCleaners expand the function pointer concept by taking a Dictionary of column-name/keys/labels and function pointers.  This allows you to map different parts of your data using different cleaning functions.  For example, you might map a date field to convert it into a Python Date object, while mapping a currency field to convert it to a Python Decimal in a different currency.
+FuncDictMappers expand the function pointer concept by taking a Dictionary of column-names and function pointers.  This allows you to map different parts of your data using different functions.  For example, you might map a date field to convert it into a Python Date object, while mapping a currency field to convert it to a Python Decimal in a different currency.
 
-Let's use the following CSV data (included as "sanio/parsers/test_data/numbers.csv" in the source) as an example:
+Let's use the following CSV data (included as "sanio/parsers/test_data/numbers.csv" in the source of the Python library) as an example:
 
 ```
 "SMBL","Price","Date","Time","Day Change","Open","High","Low","Volume"
@@ -83,64 +99,79 @@ Let's use the following CSV data (included as "sanio/parsers/test_data/numbers.c
 "NFLX",80.56,"4/30/2012","1:56pm",-3.18,82.61,83.8723,80.10,4504323
 ```
 
-Let's say that we wanted to convert each company's ticker symbol into their company name on import.  First we would implement a function to convert symbols into company names; and then pass a function pointer to said function to the cleaner, like this:
+Let's say that we wanted to convert each company's ticker symbol into their company name on import.  First we would implement a function to convert symbols into company names, and then pass a function pointer to said function to the cleaner:
 
 ```
-    def company_name_for_ticket_symbol(smbl):
-        ...do some lookups...
-        return company_name
+def company_name_for_ticket_symbol(smbl):
+	...do some lookups...
+	return company_name
 
-    data = CSVParser(
-                reader=FileReader('numbers.csv'),
-                cleaner=FuncCleaner(company_name_for_ticket_symbol)
-           )
+data = CSVReader(
+	reader=FileReader('numbers.csv'),
+	cleaner=FuncMapper(company_name_for_ticket_symbol)
+)
 ```
 
 
+----
 
+### -- END OF USEFUL DESCRIPTIONS. ON TO SIMPLE EXAMPLES --
+
+----
 
 
 Example dealing with NULL byte errors:
 
-```
-    data = CSVParser(
-                reader=FileReader('exitfiles/NKK_20120430_ORDER.CSV'
-           )
-```
 
 ```
-_csv.Error: line contains NULL byte
-```
-
-```
-    data = CSVParser(
-                reader=FileReader('exitfiles/NKK_20120430_ORDER.CSV',
-                cleaner=FuncCleaner(StringCleaner.remove_null_bytes))
-           )
+data = CSVReader(
+		reader=FileReader('files/SOME_DATA.CSV',
+				cleaner=FuncMapper(StringCleaner.remove_null_bytes))
+	)
 ```
 
 
-
-
-```
->>> parser = CSVParser(reader=FileReader('test_data/simple.csv'), cleaner=FuncDictCleaner({'c': BaseCleaner.safe_int}))
-
->>> [i for i in parser]
-[{'a': 'one', 'c': 3, 'b': 'two'}]
-```
+Pull some data from a CSV, but skip lines with an empty 'Price' field:
 
 ```
->>> parser = CSVParser(reader=FileReader('test_data/numbers.csv'))
+data = CSVReader(
+			reader=FileReader('files/SOME_DATA.CSV'),
+			filter=RowFilter('Price', function=StringValidator.is_empty)
+		)
+```
 
->>> [i['SMBL'] for i in parser]
-['AAPL', 'GOOG', 'NFLX']
-
->>> parser = DictTransform(reader=CSVParser(reader=FileReader('test_data/numbers.csv')), remap_fields={'SMBL': 'Symbol'})
-
->>> [i['Symbol'] for i in parser]
-['AAPL', 'GOOG', 'NFLX']
-
->>> [i['Symbol'] for i in DictTransform(reader=CSVParser(reader=FileReader('test_data/numbers.csv')), remap_fields={'SMBL': 'Symbol'})]
-['AAPL', 'GOOG', 'NFLX']
+Get RSS posts whose titles don't contain the word "links":
 
 ```
+data = RSSReader(
+			reader=URLReader('http://some.blog.foo/feed/'),
+			filter=RowFilter('Title', function=lambda x: x.lower().find('links') < 0)
+		)
+```
+
+
+LICENSE
+=======
+Copyright (c) 2012, Erik Smartt
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list
+of conditions and the following disclaimer.
+
+Redistributions in binary form must reproduce the above copyright notice, this
+list of conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

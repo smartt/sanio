@@ -1,9 +1,9 @@
 import re
 
-from base_cleaner import BaseCleaner
+from sanio.base_sanio import BaseSanio
 
 
-class StringCleaner(BaseCleaner):
+class StringCleaner(BaseSanio):
     def __init__(self, *args, **kwargs):
         super(StringCleaner, self).__init__(*args, **kwargs)
 
@@ -111,8 +111,38 @@ class StringCleaner(BaseCleaner):
         return output
 
     @classmethod
-    def int_or_zero(i):
+    def initial_caps(cls, s):
+        """
+        >>> StringCleaner.initial_caps('Hi There')
+        'Hi There'
+
+        >>> StringCleaner.initial_caps('hi there')
+        'Hi There'
+
+        """
+        return ' '.join([foo.capitalize() for foo in str(s).split(' ')])
+
+    @classmethod
+    def int_or_zero(cls, i):
         return StringCleaner.safe_int(i, default=0)
+
+    @classmethod
+    def lower(cls, s):
+        """
+        >>> StringCleaner.lower('Hi There')
+        'hi there'
+
+        >>> StringCleaner.lower('hi there')
+        'hi there'
+
+        >>> StringCleaner.lower('42')
+        '42'
+
+        >>> StringCleaner.lower(42)
+        '42'
+
+        """
+        return str(s).lower()
 
     @classmethod
     def price_like(cls, s):
@@ -192,13 +222,13 @@ class StringCleaner(BaseCleaner):
 
 
         >>> StringCleaner.price_like_float('$19.95')
-        19.949999999999999
+        19.95
 
         >>> StringCleaner.price_like_float('19.95')
-        19.949999999999999
+        19.95
 
         >>> StringCleaner.price_like_float('19.95345')
-        19.949999999999999
+        19.95
 
         >>> StringCleaner.price_like_float('19.5')
         19.5
@@ -421,7 +451,7 @@ class StringCleaner(BaseCleaner):
         >>> StringCleaner.strip_and_compact_str('     Hi         there. <br />    <br />  Whats    up?   ')
         'Hi there. Whats up?'
 
-        >>> StringCleaner.strip_and_compact_str('\t  Hi \r there. <br /><br />Whats up?')
+        >>> StringCleaner.strip_and_compact_str('\\t  Hi \\r there. <br /><br />Whats up?')
         'Hi there. Whats up?'
 
         >>> StringCleaner.strip_and_compact_str('<p>Hi there. <br /><br />Whats up?</p>')
@@ -492,6 +522,24 @@ class StringCleaner(BaseCleaner):
             return ''
 
         return cls.sql_safe(cls.slugify(s).upper().replace('-', ''))
+
+    @classmethod
+    def upper(cls, s):
+        """
+        >>> StringCleaner.upper('Hi There')
+        'HI THERE'
+
+        >>> StringCleaner.upper('hi there')
+        'HI THERE'
+
+        >>> StringCleaner.upper('42')
+        '42'
+
+        >>> StringCleaner.upper(42)
+        '42'
+
+        """
+        return str(s).upper()
 
 ## ---------------------
 if __name__ == "__main__":

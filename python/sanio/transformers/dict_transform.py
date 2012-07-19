@@ -1,7 +1,7 @@
-from base_transform import BaseTransform
+from sanio.base_sanio import BaseSanio
 
 
-class DictTransform(BaseTransform):
+class DictTransform(BaseSanio):
     def __init__(self, *args, **kwargs):
         self.remap_fields = None
 
@@ -23,7 +23,7 @@ class DictTransform(BaseTransform):
         return result
 
     def next_generator(self):
-        for bit in self.reader:
+        for bit in self.data_source:
             yield bit
 
     def next(self):
@@ -100,36 +100,3 @@ class NonSparseDictTransform(DictTransform):
             results = remap_results
 
         return results
-
-
-# --------------------------------------------------
-def test():
-    """
-    >>> from sanio.readers import ListReader
-
-    >>> parser = DictTransform(reader=ListReader([{'foo': 1, 'blah': 2}]), remap_fields={'foo': 'bar'})
-    >>> [i['bar'] for i in parser]
-    [1]
-
-    >>> parser = DictTransform(reader=ListReader([{'foo': 1, 'blah': 2}]), remap_fields={'foo': 'bar'})
-    >>> [i for i in parser]
-    [{'blah': 2, 'bar': 1}]
-
-    >>> parser = DictTransform(reader=ListReader([{'foo': 1, 'blah': ''}]), remap_fields={'foo': 'bar'})
-    >>> [i for i in parser]
-    [{'blah': '', 'bar': 1}]
-
-    >>> parser = NonSparseDictTransform(reader=ListReader([{'foo': 1, 'blah': ''}]), remap_fields={'foo': 'bar'})
-    >>> [i for i in parser]
-    [{'bar': 1}]
-
-    """
-    pass
-
-
-## ---------------------
-if __name__ == "__main__":
-    import doctest
-    print "Testing..."
-    doctest.testmod()
-    print "Done."

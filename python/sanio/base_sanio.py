@@ -3,8 +3,11 @@
 class BaseSanio(object):
     def __init__(self, *args, **kwargs):
         self.cleaner = None
-        self.reader = None
+        self.filter = None
+        self.data_source = None
         self.verbose = False
+
+        self._iter_complete = False
 
         for k, v in kwargs.items():
             self.__dict__[k] = v
@@ -26,6 +29,12 @@ class BaseSanio(object):
                 pass
 
         return line
+
+    def clean(self, key=None, value=None):
+        return value
+
+    def filter(self, d):
+        return d
 
     def next(self):
         raise StopIteration

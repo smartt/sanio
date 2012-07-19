@@ -3,9 +3,9 @@
 from sanio.base_sanio import BaseSanio
 
 
-class AbbrCleaner(BaseSanio):
+class S3Writer(BaseSanio):
     def __init__(self, *args, **kwargs):
-        super(AbbrCleaner, self).__init__(*args, **kwargs)
+        super(S3Writer, self).__init__(*args, **kwargs)
 
 # --------------------------------------------------
 #               MAIN

@@ -1,7 +1,7 @@
-from base_reader import BaseReader
+from sanio.base_sanio import BaseSanio
 
 
-class ListReader(BaseReader):
+class ListReader(BaseSanio):
     def __init__(self, data, *args, **kwargs):
         self.original_data = data
         self.data = self.seek(0)

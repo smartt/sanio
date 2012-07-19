@@ -3,9 +3,14 @@
 from sanio.base_sanio import BaseSanio
 
 
-class AbbrCleaner(BaseSanio):
+class FTPReader(BaseSanio):
     def __init__(self, *args, **kwargs):
-        super(AbbrCleaner, self).__init__(*args, **kwargs)
+        super(FTPReader, self).__init__(*args, **kwargs)
+
+
+class SFTPReader(BaseSanio):
+    def __init__(self, *args, **kwargs):
+        super(SFTPReader, self).__init__(*args, **kwargs)
 
 # --------------------------------------------------
 #               MAIN
