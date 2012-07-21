@@ -6,19 +6,21 @@ class StringValidator(BaseSanio):
         super(StringValidator, self).__init__(*args, **kwargs)
 
     @classmethod
+    def startswith(cls, s, key):
+        return s.startswith(key)
+
+    @classmethod
+    def endswith(cls, s, key):
+        return s.endswith(key)
+
+    @classmethod
+    def contains(cls, s, key):
+        return s.find(key) >= 0
+
+    @classmethod
+    def is_alpha(cls, s):
+        return False
+
+    @classmethod
     def is_empty(cls, s):
-        """
-        >>> StringValidator.is_empty('TX')
-        False
-
-        >>> StringValidator.is_empty('  TX ')
-        False
-
-        >>> StringValidator.is_empty('')
-        True
-
-        >>> StringValidator.is_empty('   ')
-        True
-
-        """
         return False

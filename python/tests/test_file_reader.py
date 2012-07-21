@@ -1,20 +1,14 @@
+import unittest
+
 from sanio.readers import FileReader
 
 
-def file_test():
-    """
-    >>> fr = FileReader('test_data/simple.txt')
+class TestFileReader(unittest.TestCase):
+    def test_simple(self):
+        fr = FileReader('test_data/simple.txt')
 
-    >>> [i for i in fr]
-    ['One, two, three shows how', 'Serial commas are good', 'Correcting grammar']
-
-    """
-    pass
+        self.assertEqual([i for i in fr], ['One, two, three shows how', 'Serial commas are good', 'Correcting grammar'])
 
 
-## ---------------------
-if __name__ == "__main__":
-    import doctest
-    print "Testing..."
-    doctest.testmod()
-    print "Done."
+if __name__ == '__main__':
+    unittest.main()

@@ -3,18 +3,7 @@ import codecs
 from sanio.base_sanio import BaseSanio
 
 
-class FileReader(BaseSanio):
-    def __init__(self, filename, *args, **kwargs):
-        self.filename = filename
-        self._next_line = None
-
-        super(FileReader, self).__init__(*args, **kwargs)
-
-    def next_line(self):
-            with open(self.filename, 'r') as fp:
-                for line in fp.readlines():
-                    yield line.rstrip('\n')
-
+class BaseReader(BaseSanio):
     def next(self):
         if self._next_line is None:
             self._next_line = self.next_line()
@@ -26,11 +15,24 @@ class FileReader(BaseSanio):
         return line
 
 
-class UTF16FileReader(BaseSanio):
+class FileReader(BaseReader):
     def __init__(self, filename, *args, **kwargs):
         self.filename = filename
         self._next_line = None
-        self.BLOCKSIZE = 1048576  # or some other, desired size in bytes
+
+        super(FileReader, self).__init__(*args, **kwargs)
+
+    def next_line(self):
+            with open(self.filename, 'r') as fp:
+                for line in fp.readlines():
+                    yield line.rstrip('\n')
+
+
+class UTF16FileReader(BaseReader):
+    def __init__(self, filename, blocksize=1048576, *args, **kwargs):
+        self.filename = filename
+        self._next_line = None
+        self.BLOCKSIZE = blocksize
 
         super(UTF16FileReader, self).__init__(*args, **kwargs)
 
@@ -43,13 +45,3 @@ class UTF16FileReader(BaseSanio):
                     raise StopIteration
 
                 yield contents
-
-    def next(self):
-        if self._next_line is None:
-            self._next_line = self.next_line()
-
-        line = self._next_line.next()
-
-        line = self._clean(line)
-
-        return line

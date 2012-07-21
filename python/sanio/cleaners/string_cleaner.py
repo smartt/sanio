@@ -12,13 +12,6 @@ class StringCleaner(BaseSanio):
         """
         Convert whitespace (ie., spaces, tabs, linebreaks, etc.) to spaces, and
         compress multiple-spaces into single-spaces.
-
-        >>> StringCleaner.compress_whitespace('   Oh   hai    there   ')
-        'Oh hai there'
-
-        >>> StringCleaner.compress_whitespace('      ')
-        ''
-
         """
         # Cast to string
         s = str(s).strip()
@@ -36,58 +29,13 @@ class StringCleaner(BaseSanio):
     def escape(cls, html):
         """
         Returns the given HTML with ampersands, quotes and carets encoded.
-
-        >>> StringCleaner.escape('<b>oh hai</b>')
-        '&lt;b&gt;oh hai&lt;/b&gt;'
-
-        >>> StringCleaner.escape("Quote's Test")
-        'Quote&#39;s Test'
-
         """
         return ("%s" % (html)).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
     @classmethod
     def extract_numbers_safe(cls, s, decimals=False):
         """
-        >>> StringCleaner.extract_numbers_safe('123')
-        '123'
-
-        >>> StringCleaner.extract_numbers_safe('1a2b3c')
-        '123'
-
-        >>> StringCleaner.extract_numbers_safe('1-2-3-')
-        '123'
-
-        >>> StringCleaner.extract_numbers_safe(None)
-        ''
-
-        >>> StringCleaner.extract_numbers_safe(7)
-        '7'
-
-        >>> StringCleaner.extract_numbers_safe('-1')
-        '-1'
-
-        >>> StringCleaner.extract_numbers_safe('-3.14')
-        '-314'
-
-        >>> StringCleaner.extract_numbers_safe('-3.14', decimals=True)
-        '-3.14'
-
-        >>> StringCleaner.extract_numbers_safe('-314', decimals=True)
-        '-314'
-
-        >>> StringCleaner.extract_numbers_safe('314', decimals=True)
-        '314'
-
-        >>> StringCleaner.extract_numbers_safe('-3.14.25')
-        '-31425'
-
-        >>> StringCleaner.extract_numbers_safe('-3.14.25', decimals=True)
-        '-3.14'
-
-        >>> StringCleaner.extract_numbers_safe('1,024')
-        '1024'
-
+        Returns a string containing only the numbers from the input string, s.
         """
         if decimals:
             tmp = ''.join([i for i in cls.escape(s) if ((i >= '0') and (i <= '9') or i == '.')])
@@ -112,14 +60,6 @@ class StringCleaner(BaseSanio):
 
     @classmethod
     def initial_caps(cls, s):
-        """
-        >>> StringCleaner.initial_caps('Hi There')
-        'Hi There'
-
-        >>> StringCleaner.initial_caps('hi there')
-        'Hi There'
-
-        """
         return ' '.join([foo.capitalize() for foo in str(s).split(' ')])
 
     @classmethod
@@ -128,53 +68,10 @@ class StringCleaner(BaseSanio):
 
     @classmethod
     def lower(cls, s):
-        """
-        >>> StringCleaner.lower('Hi There')
-        'hi there'
-
-        >>> StringCleaner.lower('hi there')
-        'hi there'
-
-        >>> StringCleaner.lower('42')
-        '42'
-
-        >>> StringCleaner.lower(42)
-        '42'
-
-        """
         return str(s).lower()
 
     @classmethod
     def price_like(cls, s):
-        """
-        >>> StringCleaner.price_like('')
-        ''
-
-        >>> StringCleaner.price_like('$19.95')
-        '19.95'
-
-        >>> StringCleaner.price_like('19.95')
-        '19.95'
-
-        >>> StringCleaner.price_like('19.95345')
-        '19.95'
-
-        >>> StringCleaner.price_like('19.5')
-        '19.50'
-
-        >>> StringCleaner.price_like('19.')
-        '19.00'
-
-        >>> StringCleaner.price_like('19')
-        '19.00'
-
-        >>> StringCleaner.price_like('19.5.34')
-        ''
-
-        >>> StringCleaner.price_like('.19')
-        '0.19'
-
-        """
         if s.strip() == '':
             return ''
 
@@ -217,41 +114,11 @@ class StringCleaner(BaseSanio):
 
     @classmethod
     def price_like_float(cls, s):
-        """
-        >>> StringCleaner.price_like_float('')
-
-
-        >>> StringCleaner.price_like_float('$19.95')
-        19.95
-
-        >>> StringCleaner.price_like_float('19.95')
-        19.95
-
-        >>> StringCleaner.price_like_float('19.95345')
-        19.95
-
-        >>> StringCleaner.price_like_float('19.5')
-        19.5
-
-        >>> StringCleaner.price_like_float('19.')
-        19.0
-
-        >>> StringCleaner.price_like_float('19')
-        19.0
-
-        >>> StringCleaner.price_like_float('19.5.34')
-
-
-        >>> StringCleaner.price_like_float('.19')
-        0.19
-
-        """
-
         try:
             return float(cls.price_like(s))
 
         except ValueError:
-            return
+            return None
 
     @classmethod
     def remove_null_bytes(cls, s):
@@ -259,32 +126,6 @@ class StringCleaner(BaseSanio):
 
     @classmethod
     def safe_bool(cls, input):
-        """
-        >>> StringCleaner.safe_bool('1')
-        True
-
-        >>> StringCleaner.safe_bool('True')
-        True
-
-        >>> StringCleaner.safe_bool(True)
-        True
-
-        >>> StringCleaner.safe_bool(False)
-        False
-
-        >>> StringCleaner.safe_bool('False')
-        False
-
-        >>> StringCleaner.safe_bool('0')
-        False
-
-        >>> StringCleaner.safe_bool(None)
-        False
-
-        >>> StringCleaner.safe_bool('on')
-        True
-
-        """
         if input is None:
             return False
 
@@ -307,58 +148,6 @@ class StringCleaner(BaseSanio):
 
     @classmethod
     def safe_int(cls, arg, default=None):
-        """
-        >>> StringCleaner.safe_int('0')
-        0
-
-        >>> StringCleaner.safe_int('1')
-        1
-
-        >>> StringCleaner.safe_int('a')
-
-        >>> StringCleaner.safe_int('12.3')
-        123
-
-        >>> StringCleaner.safe_int('1a2b3c')
-        123
-
-        >>> StringCleaner.safe_int('<1a2b3c/>')
-        123
-
-        >>> StringCleaner.safe_int(None)
-
-
-        >>> StringCleaner.safe_int('None')
-
-
-        >>> StringCleaner.safe_int(1)
-        1
-
-        >>> StringCleaner.safe_int(u'')
-
-
-        >>> StringCleaner.safe_int(1, None)
-        1
-
-        >>> StringCleaner.safe_int('hi', 0)
-        0
-
-        >>> StringCleaner.safe_int(None, 0)
-        0
-
-        >>> StringCleaner.safe_int(None, None)
-
-
-        >>> StringCleaner.safe_int(u'', 0)
-        0
-
-        >>> StringCleaner.safe_int(u'-1')
-        -1
-
-        >>> StringCleaner.safe_int('0044500')
-        44500
-
-        """
         try:
             return int(arg)
         except:
@@ -369,34 +158,10 @@ class StringCleaner(BaseSanio):
 
     @classmethod
     def safe_split(cls, input, delimiter='_'):
-        """
-        >>> StringCleaner.safe_split('hi_there', '_')
-        ['hi', 'there']
-
-        >>> StringCleaner.safe_split('<blink>Hai World</blink>', ' ')
-        ['&lt;blink&gt;Hai', 'World&lt;/blink&gt;']
-
-        >>> StringCleaner.safe_split('_', '_')
-        ['', '']
-
-        """
         return cls.escape(input).split(delimiter)
 
     @classmethod
     def slugify(cls, s):
-        """
-        >>> StringCleaner.slugify('oh hai')
-        'oh-hai'
-
-        >>> StringCleaner.slugify('OH HAI')
-        'oh-hai'
-
-        >>> StringCleaner.slugify('"oh_hai!"')
-        'oh-hai'
-
-        >>> StringCleaner.slugify("oh_hai!'s")
-        'oh-hais'
-        """
         if s is None:
             return s
 
@@ -407,28 +172,6 @@ class StringCleaner(BaseSanio):
 
     @classmethod
     def sql_safe(cls, s):
-        """
-        >>> StringCleaner.sql_safe(None)
-
-
-        >>> StringCleaner.sql_safe('hi there')
-        'hi there'
-
-        >>> StringCleaner.sql_safe('foo/')
-        'foo'
-
-        >>> StringCleaner.sql_safe('hi -- there')
-        'hi   there'
-
-        >>> StringCleaner.sql_safe('hi; there')
-        'hi there'
-
-        >>> StringCleaner.sql_safe("hi' WHERE=1")
-        "hi\' WHERE=1"
-
-        >>> StringCleaner.sql_safe('hi /* there */')
-        'hi  there'
-        """
         if s is None:
             return None
 
@@ -444,25 +187,6 @@ class StringCleaner(BaseSanio):
         """
         Remove tags, spaces, etc.  Basically, if someone passed in multiple
         paragraphs, we're going to compact the text into a single block.
-
-        >>> StringCleaner.strip_and_compact_str('Hi there. <br /><br />Whats up?')
-        'Hi there. Whats up?'
-
-        >>> StringCleaner.strip_and_compact_str('     Hi         there. <br />    <br />  Whats    up?   ')
-        'Hi there. Whats up?'
-
-        >>> StringCleaner.strip_and_compact_str('\\t  Hi \\r there. <br /><br />Whats up?')
-        'Hi there. Whats up?'
-
-        >>> StringCleaner.strip_and_compact_str('<p>Hi there. <br /><br />Whats up?</p>')
-        'Hi there. Whats up?'
-
-        >>> StringCleaner.strip_and_compact_str("Hi there.  Let's have tea.")
-        "Hi there. Let's have tea."
-
-        >>> StringCleaner.strip_and_compact_str("<i>Hi there.</i><i>Let's have tea.")
-        "Hi there.Let's have tea."
-
         """
         # Strip tabs
         s = cls.strip_tags(s)
@@ -485,18 +209,6 @@ class StringCleaner(BaseSanio):
     def strip_tags(cls, value):
         """
         Returns the given HTML with all tags stripped.
-
-        >>> StringCleaner.strip_tags('<b>oh hai</b>')
-        'oh hai'
-
-        >>> StringCleaner.strip_tags(None)
-
-        >>> StringCleaner.strip_tags('<p>oh hai.</p><p>goodbye</p>')
-        'oh hai. goodbye'
-
-        >>> StringCleaner.strip_tags('<i>oh hai.</i><i>goodbye</i>')
-        'oh hai.goodbye'
-
         """
         if value == None:
             return None
@@ -508,15 +220,7 @@ class StringCleaner(BaseSanio):
     @classmethod
     def super_flat(cls, s):
         """
-        >>> StringCleaner.super_flat('')
-        ''
-
-        >>> StringCleaner.super_flat(None)
-        ''
-
-        >>> StringCleaner.super_flat('123-456-abc')
-        '123456ABC'
-
+        Like an upper-case slug with no hyphens.
         """
         if s is None:
             return ''
@@ -525,20 +229,6 @@ class StringCleaner(BaseSanio):
 
     @classmethod
     def upper(cls, s):
-        """
-        >>> StringCleaner.upper('Hi There')
-        'HI THERE'
-
-        >>> StringCleaner.upper('hi there')
-        'HI THERE'
-
-        >>> StringCleaner.upper('42')
-        '42'
-
-        >>> StringCleaner.upper(42)
-        '42'
-
-        """
         return str(s).upper()
 
 ## ---------------------

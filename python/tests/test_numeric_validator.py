@@ -1,62 +1,43 @@
+import unittest
+
 from sanio.validators import NumericValidator
 
 
-def test():
-    """
-    >>> NumericValidator.is_float('TX')
-    False
+class TestNumericValidator(unittest.TestCase):
+    def test_trues(self):
+        self.assertTrue(NumericValidator.is_float('3.14'))
 
-    >>> NumericValidator.is_float('1')
-    False
+        self.assertTrue(NumericValidator.is_float(3.14))
 
-    >>> NumericValidator.is_float(1)
-    False
+        self.assertTrue(NumericValidator.is_integer('1'))
 
-    >>> NumericValidator.is_float('3.14')
-    True
+        self.assertTrue(NumericValidator.is_integer(1))
 
-    >>> NumericValidator.is_float(3.14)
-    True
+        self.assertTrue(NumericValidator.is_numeric('1'))
 
-    >>> NumericValidator.is_integer('TX')
-    False
+        self.assertTrue(NumericValidator.is_numeric(1))
 
-    >>> NumericValidator.is_integer('1')
-    True
+        self.assertTrue(NumericValidator.is_numeric(3.14))
 
-    >>> NumericValidator.is_integer(1)
-    True
+        self.assertTrue(NumericValidator.is_numeric('3.14'))
 
-    >>> NumericValidator.is_integer('3.14')
-    False
+    def test_falses(self):
+        self.assertFalse(NumericValidator.is_integer('TX'))
 
-    >>> NumericValidator.is_integer(3.14)
-    False
+        self.assertFalse(NumericValidator.is_float('TX'))
 
-    >>> NumericValidator.is_numeric('TX')
-    False
+        self.assertFalse(NumericValidator.is_float('1'))
 
-    >>> NumericValidator.is_numeric('  TX ')
-    False
+        self.assertFalse(NumericValidator.is_float(1))
 
-    >>> NumericValidator.is_numeric('1')
-    True
+        self.assertFalse(NumericValidator.is_integer('3.14'))
 
-    >>> NumericValidator.is_numeric(1)
-    True
+        self.assertFalse(NumericValidator.is_integer(3.14))
 
-    >>> NumericValidator.is_numeric(3.14)
-    True
+        self.assertFalse(NumericValidator.is_numeric('TX'))
 
-    >>> NumericValidator.is_numeric('3.14')
-    True
-
-    """
-    pass
+        self.assertFalse(NumericValidator.is_numeric('  TX '))
 
 ## ---------------------
 if __name__ == "__main__":
-    import doctest
-    print "Testing..."
-    doctest.testmod()
-    print "Done."
+    unittest.main()

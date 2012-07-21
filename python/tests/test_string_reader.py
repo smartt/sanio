@@ -1,49 +1,42 @@
+import unittest
+
 from sanio.cleaners import StringCleaner
 from sanio.mappers import FuncMapper
 from sanio.readers import StringReader
 
 
-def test():
-    """
-    >>> sr = StringReader('hello world')
+class TestStringReader(unittest.TestCase):
+    def test_simple(self):
+        sr = StringReader('hello world')
 
-    >>> str(sr)
-    'hello world'
+        self.assertEqual(str(sr), 'hello world')
 
-    >>> sr
-    'hello world'
+        self.assertEqual(sr, 'hello world')
 
-    >>> [i for i in sr]
-    ['hello world']
+        self.assertEqual([i for i in sr], ['hello world'])
 
-    >>> sr = StringReader('123456')
-    >>> sr
-    '123456'
+    def test_string_of_numbers(self):
+        sr = StringReader('123456')
 
-    >>> [i for i in sr]
-    ['123456']
+        self.assertEqual(sr, '123456')
 
-    >>> sr = StringReader('123456', cleaner=FuncCleaner(StringCleaner.safe_int))
-    >>> sr  # This one is cheaky, since repr() always returns a string
-    '123456'
+        self.assertEqual([i for i in sr], ['123456'])
 
-    >>> [i for i in sr]
-    [123456]
+    def test_cast_string_of_numbers(self):
+        sr = StringReader('123456', cleaner=FuncMapper(StringCleaner.safe_int))
 
-    >>> sr = StringReader('hello world', cleaner=FuncMapper(StringCleaner.super_flat))
-    >>> sr
-    'HELLOWORLD'
+        # This one is cheaky, since repr() always returns a string
+        self.assertEqual(sr, '123456')
 
-    >>> [i for i in sr]
-    ['HELLOWORLD']
+        self.assertEqual([i for i in sr], [123456])
 
-    """
-    pass
+    def test_string_mapper(self):
+        sr = StringReader('hello world', cleaner=FuncMapper(StringCleaner.super_flat))
+        self.assertEqual(sr, 'HELLOWORLD')
+
+        self.assertEqual([i for i in sr], ['HELLOWORLD'])
 
 
 ## ---------------------
 if __name__ == "__main__":
-    import doctest
-    print "Testing..."
-    doctest.testmod()
-    print "Done."
+    unittest.main()
