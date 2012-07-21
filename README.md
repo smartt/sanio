@@ -66,7 +66,7 @@ The examples above transformed CSV input into a Python Dictionary in memory.  Th
 ```
 FileWriter(
     'output.json',
-    data_source=JSONTransform(
+    data_source=JSONWriter(
         data_source=CSVReader(
             data_source=FileReader('input.csv')
         )
@@ -115,7 +115,7 @@ data = CSVReader(
 
 ----
 
-### -- END OF USEFUL DESCRIPTIONS. ON TO SIMPLE EXAMPLES --
+### -- END OF USEFUL DESCRIPTIONS. ON TO RANDOM EXAMPLES --
 
 ----
 
