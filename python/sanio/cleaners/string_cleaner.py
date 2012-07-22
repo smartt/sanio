@@ -67,8 +67,16 @@ class StringCleaner(BaseSanio):
         return StringCleaner.safe_int(i, default=0)
 
     @classmethod
+    def join(cls, s, key):
+        return s.join(key)
+
+    @classmethod
     def lower(cls, s):
         return str(s).lower()
+
+    @classmethod
+    def lstrip(cls, s):
+        return s.lstrip()
 
     @classmethod
     def price_like(cls, s):
@@ -121,8 +129,16 @@ class StringCleaner(BaseSanio):
             return None
 
     @classmethod
+    def replace(cls, s, key, value):
+        return s.replace(key, value)
+
+    @classmethod
     def remove_null_bytes(cls, s):
         return s.replace('\x00', '')
+
+    @classmethod
+    def rstrip(cls, s):
+        return s.rstrip()
 
     @classmethod
     def safe_bool(cls, input):
