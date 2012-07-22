@@ -1,3 +1,5 @@
+import random
+
 from sanio.base_sanio import BaseSanio
 
 
@@ -7,6 +9,18 @@ class RowFilter(BaseSanio):
         self.fn = function
 
         super(RowFilter, self).__init__(*args, **kwargs)
+
+    @classmethod
+    def random_filter(self, d):
+        """
+        A coin-toss filter that you can use to randomly keep/omit lines of data.
+        """
+        random.seed()
+
+        if random.randint(0, 9) > 5:
+            return True
+        else:
+            return False
 
     def filter(self, d):
         # If we have a field to work on, run the function just on that field.
