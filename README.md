@@ -1,4 +1,9 @@
-**SANIO IS A WORK IN PROGRESS!!** YMMV.
+**SANIO IS A WORK IN PROGRESS!! YMMV **
+
+Possibly dependencies (depending on what code you're using):
+
+ - chardet (character-type detection.) I'm using version 1.0.1.
+ - xlrd (for reading Excel files.) I'm using something like 0.7.6.
 
 
 ## Sanio Tool Chain
