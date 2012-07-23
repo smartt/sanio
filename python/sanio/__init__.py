@@ -1,6 +1,7 @@
 from aggregators import *
 from cleaners import *
 from filters import *
+from mappers import *
 from readers import *
 from transformers import *
 from validators import *

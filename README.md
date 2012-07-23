@@ -1,13 +1,16 @@
-**SANIO IS A WORK IN PROGRESS!! YMMV **
+**SANIO IS A WORK IN PROGRESS THAT COULD EXPERIENCE MAJOR REFACTORING AND REDESIGN!! YMMV UNTIL IT STABALIZES **
 
-Possibly dependencies (depending on what code you're using):
+Possibly dependencies (depending on what you're doing):
 
  - chardet (character-type detection.) I'm using version 1.0.1.
- - xlrd (for reading Excel files.) I'm using something like 0.7.6.
-
+ - xlrd (for reading/writing Excel files.) I'm using something like 0.7.6.
 
 ## Sanio Tool Chain
-Sanio features a collection of tools for reformatting and translating input data into something more enjoyable to work with.  These include:
+Sanio features a collection of tools for reformatting and translating input data into something more enjoyable to work with.  Furthermore, Sanio offers a pattern for extending these tools to add your own, unique steps to your data-processing pipeline.
+
+At the core, every Sanio object (that inherits from BaseSanio) is a cleaner, filter, reader, validator, writer, and a data_source.  Because the tools all share common interfaces, they can be chained together.
+
+Sanio's tools are spread accross the following categories:
 
  - Aggregators
  - Cleaners
@@ -15,11 +18,7 @@ Sanio features a collection of tools for reformatting and translating input data
  - Readers
  - Transformers
  - Validators
- - Writers
- 
-At the core, every Sanio object is a cleaner, filter, reader, validator, writer, and a data_source (meaning that it will tell you its content when iterated over, or called.)  Because the tools all share common interfaces, they can be chained together; However, some objects are better at certain tasks than others.  For example, instead of letting a FileReader clean itself (which will have no effect), you might connect it to a UTF8 cleaner.
-
-Before we get over our heads, let's start with simple descriptions of each tool type:
+ - Writers 
 
 ### Aggregators
 Aggregators analyze entire rows or columns of data.  They can compute averages, min/max, sums, and other values.  They are generally used to create (or insert) new data based on input data.

@@ -3,9 +3,9 @@
 from sanio.base_sanio import BaseSanio
 
 
-class SQLLiteReader(BaseSanio):
+class CSVWriter(BaseSanio):
     def __init__(self, *args, **kwargs):
-        super(SQLLiteReader, self).__init__(*args, **kwargs)
+        super(CSVWriter, self).__init__(*args, **kwargs)
 
 # --------------------------------------------------
 #               MAIN

@@ -3,9 +3,9 @@
 from sanio.base_sanio import BaseSanio
 
 
-class IMWriter(BaseSanio):
+class XLSWriter(BaseSanio):
     def __init__(self, *args, **kwargs):
-        super(IMWriter, self).__init__(*args, **kwargs)
+        super(XLSWriter, self).__init__(*args, **kwargs)
 
 # --------------------------------------------------
 #               MAIN
