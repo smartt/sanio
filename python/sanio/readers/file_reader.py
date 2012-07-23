@@ -8,11 +8,7 @@ class BaseReader(BaseSanio):
         if self._next_line is None:
             self._next_line = self.next_line()
 
-        line = self._next_line.next()
-
-        line = self._clean(line)
-
-        return line
+        return self._filter(self._clean(self._next_line.next()))
 
 
 class FileReader(BaseReader):
