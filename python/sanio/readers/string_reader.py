@@ -41,22 +41,7 @@ class StringReader(BaseSanio):
         else:
             self._iter_complete = True
 
-            if self.cleaner is not None:
-                try:
-                    result = self.cleaner.clean(None, self.data)
-
-                except AttributeError:
-                    # self.cleaner is probably None
-                    result = self.data
-
-                except TypeError:
-                    # self.cleaner.clean isn't callable
-                    result = self.data
-
-            else:
-                result = self.data
-
-            return result
+            return self._filter(self._clean(self.data))
 
     def reset(self):
         self.data = self.seek(0)
