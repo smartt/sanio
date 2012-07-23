@@ -58,10 +58,10 @@ instead.  (Yes, Python has `csv.DictReader`, but bear with me -- we'll get to th
 the_data_as_a_dict = CSVReader(data_source=FileReader('input.csv'))
 ```
 
-If your data was online, you might use the (currently fictional) URLReader instead:
+If your data was online, you might use the HTTPReader instead:
 
 ```
-the_data_as_a_dict = CSVReader(data_source=URLReader('http://example.com/input.csv'))
+the_data_as_a_dict = CSVReader(data_source=HTTPReader('http://example.com/input.csv'))
 ```
 
 ### Converting CSV to JSON
@@ -124,14 +124,24 @@ data = CSVReader(
 
 ----
 
+Downloading a file:
+
+```
+FileWriter(
+	'index.html',
+	data_source=HTTPReader('http://google.com/')
+)
+```
 
 Example dealing with NULL byte errors:
 
 
 ```
 data = CSVReader(
-		data_source=FileReader('files/SOME_DATA.CSV',
-				cleaner=FuncMapper(StringCleaner.remove_null_bytes))
+		data_source=FileReader(
+				'files/SOME_DATA.CSV',
+				cleaner=FuncMapper(StringCleaner.remove_null_bytes)
+		)
 	)
 ```
 
@@ -149,7 +159,7 @@ Get RSS posts whose titles don't contain the word "links":
 
 ```
 data = RSSReader(
-			data_source=URLReader('http://some.blog.foo/feed/'),
+			data_source=HTTPReader('http://some.blog.foo/feed/'),
 			filter=RowFilter('Title', function=lambda x: x.lower().find('links') < 0)
 		)
 ```
