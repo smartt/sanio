@@ -15,10 +15,17 @@ class BaseSanio(object):
     def __iter__(self):
         return self
 
-    def _clean(self, line):
+    def _clean(self, data):
+        out = None
+
         if self.cleaner is not None:
             try:
-                line = self.cleaner.clean(None, line)
+                if isinstance(data, (dict,)):
+                    for k, v in data.items():
+                        out[k] = self.cleaner.clean(k, v)
+
+                else:
+                    out = self.cleaner.clean(None, data)
 
             except AttributeError:
                 # self.cleaner is probably None
@@ -28,7 +35,31 @@ class BaseSanio(object):
                 # self.cleaner.clean isn't callable
                 pass
 
-        return line
+        if out is not None:
+            return out
+        else:
+            return data
+
+    def _filter(self, data):
+        out = None
+
+        if self.filter is not None:
+            # Run the filter on the row
+            try:
+                out = self.filter.filter(data)
+
+            except AttributeError:
+                # self.filter is probably None
+                pass
+
+            except TypeError:
+                # self.filter.filter isn't callable
+                pass
+
+        if out is not None:
+            return out
+        else:
+            return data
 
     def clean(self, key=None, value=None):
         return value
