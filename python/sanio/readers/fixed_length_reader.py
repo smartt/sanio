@@ -50,20 +50,7 @@ class FixedLengthReader(BaseSanio):
                 except IndexError:
                     v = line[index:].strip()
 
-                if self.cleaner is not None:
-                    try:
-                        d[k] = self.cleaner.clean(k, v)
-
-                    except AttributeError:
-                        # self.cleaner is probably None
-                        d[k] = v
-
-                    except TypeError:
-                        # self.cleaner.clean isn't callable
-                        d[k] = v
-
-                else:
-                    d[k] = v
+                d[k] = self._clean({k: v})
 
                 try:
                     index += tup[1]
@@ -71,18 +58,7 @@ class FixedLengthReader(BaseSanio):
                 except IndexError:
                     pass
 
-            if self.filter is not None:
-                # Run the filter on the row
-                try:
-                    d = self.filter.filter(d)
-
-                except AttributeError:
-                    # self.filter is probably None
-                    pass
-
-                except TypeError:
-                    # self.filter.filter isn't callable
-                    pass
+            d = self._filter(d)
 
         return d
 

@@ -1,4 +1,9 @@
-import xlrd
+try:
+    import xlrd
+except ImportError:
+    _HAS_XLRD = False
+else:
+    _HAS_XLRD = True
 
 from base_reader import BaseReader
 
@@ -12,10 +17,11 @@ class XLSReader(BaseReader):
         super(XLSReader, self).__init__(*args, **kwargs)
 
     def _setup(self):
-        self.wb = xlrd.open_workbook(self.filename)
-        self.sheet_count = self.wb.nsheets
-        self.sheet_names = self.wb.sheet_names()
-        self.current_sheet = self.wb.sheet_by_index(0)
+        if _HAS_XLRD:
+            self.wb = xlrd.open_workbook(self.filename)
+            self.sheet_count = self.wb.nsheets
+            self.sheet_names = self.wb.sheet_names()
+            self.current_sheet = self.wb.sheet_by_index(0)
 
     def next_line(self):
         if self.wb is None:
@@ -36,6 +42,9 @@ class XLSReader(BaseReader):
             yield ','.join(line_bits)
 
     def next(self):
+        if not _HAS_XLRD:
+            raise StopIteration
+
         if self._next_line is None:
             self._next_line = self.next_line()
 

@@ -9,9 +9,26 @@ class CSVReader(BaseSanio):
     a Python Dictionary.
     """
     def __init__(self, *args, **kwargs):
-        self._reader_generator = None
+        self.delimiter = ','
+        self.quotechar = '"'
 
         super(CSVReader, self).__init__(*args, **kwargs)
+
+        if 'quoting' in kwargs:
+            if kwargs['quoting'] == 'all':
+                self.quoting = csv.QUOTE_ALL
+
+            elif kwargs['quoting'] == 'minimal':
+                self.quoting = csv.QUOTE_MINIMAL
+
+            elif kwargs['quoting'] == 'nonnumeric':
+                self.quoting = csv.QUOTE_NONNUMERIC
+
+            elif kwargs['quoting'] == 'none':
+                self.quoting = csv.QUOTE_NONE
+
+        else:
+            self.quoting = csv.QUOTE_ALL
 
     def __call__(self):
         return [i for i in self]
@@ -36,8 +53,9 @@ class CSVReader(BaseSanio):
         return result
 
     def next_generator(self):
-        for bit in csv.DictReader(self.data_source):
-            yield bit
+        if self.data_source is not None:
+            for bit in csv.DictReader(self.data_source, delimiter=self.delimiter, quotechar=self.quotechar, quoting=self.quoting):
+                yield bit
 
     def next(self):
         # 'd' is going to be a Dictionary, but we're doing this ugly
@@ -51,8 +69,7 @@ class CSVReader(BaseSanio):
             if self._reader_generator is None:
                 self._reader_generator = self.next_generator()
 
-            # Grab the next bit of data from the reader, and split it using our
-            # frame definitions.
-            d = self._filter(self._clean(self._reader_generator.next()))
+            # Grab the next bit of data from the reader
+            return self._filter(self._clean(self._reader_generator.next()))
 
         return d

@@ -3,10 +3,11 @@
 class BaseSanio(object):
     def __init__(self, *args, **kwargs):
         self.cleaner = None
-        self.filter = None
+        self.filterer = None
         self.data_source = None
         self.verbose = False
 
+        self._reader_generator = None
         self._iter_complete = False
 
         for k, v in kwargs.items():
@@ -46,7 +47,7 @@ class BaseSanio(object):
         if self.filter is not None:
             # Run the filter on the row
             try:
-                out = self.filter.filter(data)
+                out = self.filterer.filter(data)
 
             except AttributeError:
                 # self.filter is probably None

@@ -113,7 +113,7 @@ class TestStringCleaner(unittest.TestCase):
     def test_strip_and_compact_str(self):
         self.assertEqual(StringCleaner.strip_and_compact_str('Hi there. <br /><br />Whats up?'), 'Hi there. Whats up?')
         self.assertEqual(StringCleaner.strip_and_compact_str('     Hi         there. <br />    <br />  Whats    up?   '), 'Hi there. Whats up?')
-        self.assertEqual(StringCleaner.strip_and_compact_str('\\t  Hi \\r there. <br /><br />Whats up?'), 'Hi there. Whats up?')
+        self.assertEqual(StringCleaner.strip_and_compact_str('\t  Hi \r there. <br /><br />Whats up?'), 'Hi there. Whats up?')
         self.assertEqual(StringCleaner.strip_and_compact_str('<p>Hi there. <br /><br />Whats up?</p>'), 'Hi there. Whats up?')
         self.assertEqual(StringCleaner.strip_and_compact_str("Hi there.  Let's have tea."), "Hi there. Let's have tea.")
         self.assertEqual(StringCleaner.strip_and_compact_str("<i>Hi there.</i><i>Let's have tea."), "Hi there.Let's have tea.")
