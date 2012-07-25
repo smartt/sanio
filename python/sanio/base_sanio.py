@@ -1,3 +1,4 @@
+import models
 
 
 class BaseSanio(object):
@@ -7,11 +8,39 @@ class BaseSanio(object):
         self.data_source = None
         self.verbose = False
 
+        self._fields = []
         self._reader_generator = None
         self._iter_complete = False
 
+        #
+        # Init our instance variables using kwargs
         for k, v in kwargs.items():
             self.__dict__[k] = v
+
+        #
+        # Now we use the class fields to create instance variables.
+        for k, v in self.__class__.__dict__.items():
+            if isinstance(v, (models.SanioField,)):
+                # Save a copy for future introspection
+                self._fields.append(v)
+
+                # Now check our model definition for defaults and missing arguments
+                if k not in self.__dict__:
+                    # If the arg wasn't provided, see if it can be null, or if
+                    # it has a default.  If so, use one of those.
+                    if v.default is not None:
+                        self.__dict__[k] = v.default
+
+                    elif v.null == True:
+                        self.__dict__[k] = None
+
+                    else:
+                        raise ValueError("'{k}' is a required argument!".format(k=k))
+
+                else:
+                    if v._choices is not None:
+                        if self.__dict__[k] not in v._choices:
+                            raise ValueError("'{k}' must be one of the following: {c}".format(k=k, c=v._choices))
 
     def __iter__(self):
         return self
@@ -100,3 +129,22 @@ class BaseSanio(object):
 
     def next(self):
         raise StopIteration
+
+
+#
+# A couple test models that will likely be thrown away at some point:
+#
+class Foo(BaseSanio):
+    bar = models.StringField(default='oh hai')
+
+    def __init__(self, *args, **kwargs):
+        super(Foo, self).__init__(*args, **kwargs)
+
+
+class Bar(BaseSanio):
+    foo = models.StringField()
+    n = models.IntegerField(default=7)
+    b = models.BooleanField(default=True)
+
+    def __init__(self, *args, **kwargs):
+        super(Bar, self).__init__(*args, **kwargs)
