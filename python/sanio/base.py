@@ -8,7 +8,12 @@ class BaseSanio(object):
         self.data_source = None
         self.verbose = False
 
-        self._fields = []
+        self._fields = [
+            fields.ObjectField(name='cleaner', null=True),
+            fields.ObjectField(name='filterer', null=True),
+            fields.ObjectField(name='data_source', null=True),
+        ]
+
         self._reader_generator = None
         self._iter_complete = False
 
