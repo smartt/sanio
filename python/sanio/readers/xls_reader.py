@@ -5,7 +5,7 @@ except ImportError:
 else:
     _HAS_XLRD = True
 
-from base_reader import BaseReader
+from base import BaseReader
 
 
 class XLSReader(BaseReader):

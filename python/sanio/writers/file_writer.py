@@ -1,7 +1,7 @@
 import codecs
 import os
 
-from sanio.base_sanio import BaseSanio
+from sanio.base import BaseSanio
 
 
 class BaseWriter(BaseSanio):

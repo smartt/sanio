@@ -1,6 +1,6 @@
 
 
-class SanioField(object):
+class BaseField(object):
     def __init__(self, verbose_name=None, name=None, default=None, max_length=None,
             blank=False, null=False, editable=True, choices=None, help_text='',
             validators=[]):
@@ -16,36 +16,36 @@ class SanioField(object):
         self.validators = validators
 
 
-class BooleanField(SanioField):
+class BooleanField(BaseField):
     def __init__(self, *args, **kwargs):
         super(BooleanField, self).__init__(*args, **kwargs)
 
 
-class IntegerField(SanioField):
+class IntegerField(BaseField):
     def __init__(self, *args, **kwargs):
         super(IntegerField, self).__init__(*args, **kwargs)
 
 
-class DateField(SanioField):
+class DateField(BaseField):
     def __init__(self, *args, **kwargs):
         super(DateField, self).__init__(*args, **kwargs)
 
 
-class DateTimeField(SanioField):
+class DateTimeField(BaseField):
     def __init__(self, *args, **kwargs):
         super(DateTimeField, self).__init__(*args, **kwargs)
 
 
-class DecimalField(SanioField):
+class DecimalField(BaseField):
     def __init__(self, *args, **kwargs):
         super(DecimalField, self).__init__(*args, **kwargs)
 
 
-class EmailField(SanioField):
+class EmailField(BaseField):
     def __init__(self, *args, **kwargs):
         super(EmailField, self).__init__(*args, **kwargs)
 
 
-class StringField(SanioField):
+class StringField(BaseField):
     def __init__(self, *args, **kwargs):
         super(StringField, self).__init__(*args, **kwargs)

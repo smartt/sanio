@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sanio.base_sanio import BaseSanio
+from sanio.base import BaseSanio
 
 
 class FixedLengthWriter(BaseSanio):

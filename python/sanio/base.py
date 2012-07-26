@@ -1,4 +1,4 @@
-import models
+import fields
 
 
 class BaseSanio(object):
@@ -20,7 +20,7 @@ class BaseSanio(object):
         #
         # Now we use the class fields to create instance variables.
         for k, v in self.__class__.__dict__.items():
-            if isinstance(v, (models.SanioField,)):
+            if isinstance(v, (fields.BaseField,)):
                 # Save a copy for future introspection
                 self._fields.append(v)
 
@@ -135,16 +135,16 @@ class BaseSanio(object):
 # A couple test models that will likely be thrown away at some point:
 #
 class Foo(BaseSanio):
-    bar = models.StringField(default='oh hai')
+    bar = fields.StringField(default='oh hai')
 
     def __init__(self, *args, **kwargs):
         super(Foo, self).__init__(*args, **kwargs)
 
 
 class Bar(BaseSanio):
-    foo = models.StringField()
-    n = models.IntegerField(default=7)
-    b = models.BooleanField(default=True)
+    foo = fields.StringField()
+    n = fields.IntegerField(default=7)
+    b = fields.BooleanField(default=True)
 
     def __init__(self, *args, **kwargs):
         super(Bar, self).__init__(*args, **kwargs)
