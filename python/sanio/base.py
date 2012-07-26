@@ -136,15 +136,10 @@ class BaseSanio(object):
 #
 class Foo(BaseSanio):
     bar = fields.StringField(default='oh hai')
-
-    def __init__(self, *args, **kwargs):
-        super(Foo, self).__init__(*args, **kwargs)
+    _var = fields.StringField(default='woot')
 
 
 class Bar(BaseSanio):
     foo = fields.StringField()
     n = fields.IntegerField(default=7)
     b = fields.BooleanField(default=True)
-
-    def __init__(self, *args, **kwargs):
-        super(Bar, self).__init__(*args, **kwargs)

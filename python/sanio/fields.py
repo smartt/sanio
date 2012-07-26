@@ -41,11 +41,31 @@ class DecimalField(BaseField):
         super(DecimalField, self).__init__(*args, **kwargs)
 
 
+class DictField(BaseField):
+    def __init__(self, *args, **kwargs):
+        super(DictField, self).__init__(*args, **kwargs)
+
+
 class EmailField(BaseField):
     def __init__(self, *args, **kwargs):
         super(EmailField, self).__init__(*args, **kwargs)
 
 
+class FunctionField(BaseField):
+    def __init__(self, *args, **kwargs):
+        super(FunctionField, self).__init__(*args, **kwargs)
+
+
+class ObjectField(BaseField):
+    def __init__(self, *args, **kwargs):
+        super(ObjectField, self).__init__(*args, **kwargs)
+
+
 class StringField(BaseField):
     def __init__(self, *args, **kwargs):
         super(StringField, self).__init__(*args, **kwargs)
+
+
+class TupleField(BaseField):
+    def __init__(self, *args, **kwargs):
+        super(TupleField, self).__init__(*args, **kwargs)

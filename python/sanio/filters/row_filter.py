@@ -1,14 +1,12 @@
 import random
 
 from sanio.base import BaseSanio
+from sanio import fields
 
 
 class RowFilter(BaseSanio):
-    def __init__(self, field=None, function=None, *args, **kwargs):
-        self.field = field
-        self.fn = function
-
-        super(RowFilter, self).__init__(*args, **kwargs)
+    field = fields.StringField(null=True)
+    fn = fields.FunctionField(null=True)
 
     @classmethod
     def random_filter(self, d):

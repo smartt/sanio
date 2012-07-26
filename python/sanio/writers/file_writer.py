@@ -2,6 +2,7 @@ import codecs
 import os
 
 from sanio.base import BaseSanio
+from sanio import fields
 
 
 class BaseWriter(BaseSanio):
@@ -14,9 +15,9 @@ class BaseWriter(BaseSanio):
 
 
 class FileWriter(BaseWriter):
-    def __init__(self, filename, *args, **kwargs):
-        self.filename = filename
+    filename = fields.StringField()
 
+    def __init__(self, *args, **kwargs):
         super(FileWriter, self).__init__(*args, **kwargs)
 
         with open(self.filename, "w") as fp:
@@ -30,9 +31,9 @@ class FileWriter(BaseWriter):
 
 
 class UTF8Writer(BaseWriter):
-    def __init__(self, filename, *args, **kwargs):
-        self.filename = filename
+    filename = fields.StringField()
 
+    def __init__(self, filename, *args, **kwargs):
         super(UTF8Writer, self).__init__(*args, **kwargs)
 
         with codecs.open(self.filename, "w", "utf-8") as fp:

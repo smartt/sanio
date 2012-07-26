@@ -6,10 +6,3 @@ from sanio.base import BaseSanio
 class NumericCleaner(BaseSanio):
     def __init__(self, *args, **kwargs):
         super(NumericCleaner, self).__init__(*args, **kwargs)
-
-# --------------------------------------------------
-#               MAIN
-# --------------------------------------------------
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

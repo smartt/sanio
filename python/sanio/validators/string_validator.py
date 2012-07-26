@@ -2,9 +2,6 @@ from sanio.base import BaseSanio
 
 
 class StringValidator(BaseSanio):
-    def __init__(self, *args, **kwargs):
-        super(StringValidator, self).__init__(*args, **kwargs)
-
     @classmethod
     def contains(cls, s, key):
         return s.find(key) >= 0

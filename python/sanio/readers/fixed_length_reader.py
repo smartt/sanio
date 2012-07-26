@@ -1,4 +1,5 @@
 from sanio.base import BaseSanio
+from sanio import fields
 
 
 class FixedLengthReader(BaseSanio):
@@ -7,14 +8,10 @@ class FixedLengthReader(BaseSanio):
 
     Assumes that self.data_source is an Iterable that returns lines of text that
     will be split using self.frame_definitions lengths.
-    """
-    def __init__(self, frame_definitions=None, *args, **kwargs):
-        """
-        @param    frame_definitions    A tuple/list of tuples/lists of column names and counts.
-        """
-        self.frame_definitions = frame_definitions
 
-        super(FixedLengthReader, self).__init__(*args, **kwargs)
+    @param    frame_definitions    A tuple/list of tuples/lists of column names and counts.
+    """
+    frame_definitions = fields.TupleField(null=True)
 
     def next_generator(self):
         for bit in self.data_source:
@@ -61,37 +58,3 @@ class FixedLengthReader(BaseSanio):
             d = self._filter(d)
 
         return d
-
-
-# --------------------------------------------------
-def test():
-    """
-    >>> from sanio.cleaners import StringCleaner, FuncCleaner, FuncDictCleaner
-    >>> from sanio.readers import FileReader, StringReader
-    >>> parser = FixedLengthReader(data_source=StringReader('onetwothree'), frame_definitions=(('a', 3), ('b', 3), ('c', 5)))
-
-    >>> [i for i in parser]
-    [{'a': 'one', 'c': 'three', 'b': 'two'}]
-
-    >>> parser = FixedLengthReader(data_source=FileReader('test_data/simple.txt'), frame_definitions=(('area', 3), ('base', 3), ('ext', 4)))
-    >>> [i for i in parser]
-    [{'ext': '4567', 'base': '123', 'area': '555'}, {'ext': '5309', 'base': '867', 'area': '555'}, {'ext': '6543', 'base': '987', 'area': '555'}]
-
-    >>> parser = FixedLengthReader(data_source=FileReader('test_data/simple.txt'), frame_definitions=(('area', 3), ('base', 3), ('ext', 4)), cleaner=FuncCleaner(StringCleaner.safe_int))
-    >>> [i for i in parser]
-    [{'ext': 4567, 'base': 123, 'area': 555}, {'ext': 5309, 'base': 867, 'area': 555}, {'ext': 6543, 'base': 987, 'area': 555}]
-
-    >>> parser = FixedLengthReader(data_source=FileReader('test_data/simple.txt'), frame_definitions=(('area', 3), ('base', 3), ('ext', 4)), cleaner=FuncDictCleaner({'ext': StringCleaner.safe_int}))
-    >>> [i for i in parser]
-    [{'ext': 4567, 'base': '123', 'area': '555'}, {'ext': 5309, 'base': '867', 'area': '555'}, {'ext': 6543, 'base': '987', 'area': '555'}]
-
-    """
-    pass
-
-
-## ---------------------
-if __name__ == "__main__":
-    import doctest
-    print "Testing..."
-    doctest.testmod()
-    print "Done."

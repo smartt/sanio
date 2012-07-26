@@ -2,9 +2,6 @@ from sanio.base import BaseSanio
 
 
 class NumericAggregator(BaseSanio):
-    def __init__(self, *args, **kwargs):
-        super(NumericAggregator, self).__init__(*args, **kwargs)
-
     @classmethod
     def average(cls, series):
         return None

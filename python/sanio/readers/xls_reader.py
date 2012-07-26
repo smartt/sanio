@@ -5,16 +5,14 @@ except ImportError:
 else:
     _HAS_XLRD = True
 
-from base import BaseReader
+from sanio.base import BaseReader
+from sanio import fields
 
 
 class XLSReader(BaseReader):
-    def __init__(self, filename, *args, **kwargs):
-        self.filename = filename
-        self._next_line = None
-        self.wb = None
-
-        super(XLSReader, self).__init__(*args, **kwargs)
+    filename = fields.StringField()
+    wb = fields.ObjectField(null=True)
+    _next_line = fields.StringField(null=True)
 
     def _setup(self):
         if _HAS_XLRD:
@@ -64,46 +62,27 @@ class XLSReader(BaseReader):
 
         return line
 
-"""
-    sh = book.sheet_by_index(0)
-    print sh.name, sh.nrows, sh.ncols
-    print "Cell D30 is", sh.cell_value(rowx=29, colx=3)
-    for rx in range(sh.nrows):
-        print sh.row(rx)
-    ----------
+# """
+#     sh = book.sheet_by_index(0)
+#     print sh.name, sh.nrows, sh.ncols
+#     print "Cell D30 is", sh.cell_value(rowx=29, colx=3)
+#     for rx in range(sh.nrows):
+#         print sh.row(rx)
+#     ----------
 
-sh = wb.sheet_by_index(0)
-sh = wb.sheet_by_name(u'Sheet1')
-Iterate through rows, returning each as a list that you can index:
+# sh = wb.sheet_by_index(0)
+# sh = wb.sheet_by_name(u'Sheet1')
+# Iterate through rows, returning each as a list that you can index:
 
-for rownum in range(sh.nrows):
-    print sh.row_values(rownum)
-If you just want the first column:
+# for rownum in range(sh.nrows):
+#     print sh.row_values(rownum)
+# If you just want the first column:
 
-first_column = sh.col_values(0)
-Index individual cells:
+# first_column = sh.col_values(0)
+# Index individual cells:
 
-cell_A1 = sh.cell(0,0).value
-cell_C4 = sh.cell(rowx=3,colx=2).value
-(Note Python indices start at zero but Excel starts at one)
+# cell_A1 = sh.cell(0,0).value
+# cell_C4 = sh.cell(rowx=3,colx=2).value
+# (Note Python indices start at zero but Excel starts at one)
 
-"""
-
-
-def file_test():
-    """
-    >>> fr = XLSReader('test_data/simple.xls')
-
-    >>> [i for i in fr]
-    [u'One,Two,Three,Four', u'1.0,2.0,3.0,4.0', u'a,b,c,d', u'fe,fi,fo,fum']
-
-    """
-    pass
-
-
-## ---------------------
-if __name__ == "__main__":
-    import doctest
-    print "Testing..."
-    doctest.testmod()
-    print "Done."
+# """

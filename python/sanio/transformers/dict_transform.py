@@ -1,11 +1,9 @@
 from sanio.base import BaseSanio
+from sanio import fields
 
 
 class DictTransform(BaseSanio):
-    def __init__(self, *args, **kwargs):
-        self.remap_fields = None
-
-        super(DictTransform, self).__init__(*args, **kwargs)
+    remap_fields = fields.DictField(null=True)
 
     def __getitem__(self, i):
         # Here's the worst implementation first:
@@ -60,10 +58,7 @@ class DictTransform(BaseSanio):
 
 
 class NonSparseDictTransform(DictTransform):
-    def __init__(self, *args, **kwargs):
-        self.remap_fields = None
-
-        super(NonSparseDictTransform, self).__init__(*args, **kwargs)
+    remap_fields = fields.DictField(null=True)
 
     def next(self):
         if self._reader_generator is None:

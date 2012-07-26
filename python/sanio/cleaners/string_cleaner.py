@@ -4,9 +4,6 @@ from sanio.base import BaseSanio
 
 
 class StringCleaner(BaseSanio):
-    def __init__(self, *args, **kwargs):
-        super(StringCleaner, self).__init__(*args, **kwargs)
-
     @classmethod
     def compress_whitespace(cls, s):
         """
@@ -246,10 +243,3 @@ class StringCleaner(BaseSanio):
     @classmethod
     def upper(cls, s):
         return str(s).upper()
-
-## ---------------------
-if __name__ == "__main__":
-    import doctest
-    print "Testing..."
-    doctest.testmod()
-    print "Done."

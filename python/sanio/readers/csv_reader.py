@@ -1,17 +1,18 @@
 import csv
 
 from sanio.base import BaseSanio
+from sanio import fields
 
 
 class CSVReader(BaseSanio):
     """
-    Assumes that self.parser returns lines of text in CSV format, and outputs
+    Assumes that self.data_source returns lines of text in CSV format, and outputs
     a Python Dictionary.
     """
-    def __init__(self, *args, **kwargs):
-        self.delimiter = ','
-        self.quotechar = '"'
+    delimiter = fields.StringField(default=',')
+    quotechar = fields.StringField(default='"')
 
+    def __init__(self, *args, **kwargs):
         super(CSVReader, self).__init__(*args, **kwargs)
 
         if 'quoting' in kwargs:
