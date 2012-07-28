@@ -83,7 +83,7 @@ You'll notice an interesting pattern here.  Sanio's tools are designed to be pat
 
 ### Using Mappers
 
-Mappers allow you to manipulate data as it flows through the pipe by mapping functions to data.  There are two main mappers:  `FuncMapper` and `FuncDictMapper`.  FuncMapper is used to process each field of data through a single function.  It takes a function-pointer on initialization, like this:
+Mappers allow you to manipulate data as it flows through the pipe by mapping functions to data.  The main mapper is `FuncMapper`.  FuncMapper can be used to process each field of data through a single function using a function-pointer on initialization:
 
 ```
 FileReader(
@@ -92,7 +92,7 @@ FileReader(
 )
 ```
 
-FuncDictMappers expand the function pointer concept by taking a Dictionary of column-names and function pointers.  This allows you to map different parts of your data using different functions.  For example, you might map a date field to convert it into a Python Date object, while mapping a currency field to convert it to a Python Decimal in a different currency.
+FuncMapper can also expand the function pointer concept by taking a Dictionary of column-names and function pointers instead.  This allows you to map different parts of your data using different functions.  For example, you might map a date field to convert it into a Python Date object, while mapping a currency field to convert it to a Python Decimal in a different currency.
 
 Let's use the following CSV data (included as "sanio/parsers/test_data/numbers.csv" in the source of the Python library) as an example:
 

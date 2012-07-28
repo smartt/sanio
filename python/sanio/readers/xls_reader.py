@@ -5,11 +5,11 @@ except ImportError:
 else:
     _HAS_XLRD = True
 
-from sanio.base import BaseReader
+from sanio.base import BaseSanio
 from sanio import fields
 
 
-class XLSReader(BaseReader):
+class XLSReader(BaseSanio):
     filename = fields.StringField()
     wb = fields.ObjectField(null=True)
     _next_line = fields.StringField(null=True)
