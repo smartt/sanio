@@ -8,6 +8,8 @@ class BaseSanio(object):
         self.data_source = None
         self.verbose = False
 
+        # We can use _fields to find out what kind of connections an object
+        # needs (and can offer.)
         self._fields = [
             fields.ObjectField(name='cleaner', null=True),
             fields.ObjectField(name='filterer', null=True),
@@ -25,11 +27,18 @@ class BaseSanio(object):
         #
         # Now we use the class fields to create instance variables.
         for k, v in self.__class__.__dict__.items():
+            # Isolate any object that inherits from BaseField
             if isinstance(v, (fields.BaseField,)):
+                # If the field doesn't have a name, set the name using the
+                # name of the variable
+                if v.name is None:
+                    v.name = k
+
                 # Save a copy for future introspection
                 self._fields.append(v)
 
-                # Now check our model definition for defaults and missing arguments
+                # Now add an instance variable of the same name to the object,
+                # and initialize it based on the class' field settings.
                 if k not in self.__dict__:
                     # If the arg wasn't provided, see if it can be null, or if
                     # it has a default.  If so, use one of those.

@@ -17,9 +17,9 @@ class FileReader(BaseReader):
     _next_line = fields.StringField(null=True)
 
     def next_line(self):
-            with open(self.filename, 'r') as fp:
-                for line in fp.readlines():
-                    yield line.rstrip('\n')
+        with open(self.filename, 'r') as fp:
+            for line in fp.readlines():
+                yield line.rstrip('\n')
 
 
 class UTF16FileReader(BaseReader):

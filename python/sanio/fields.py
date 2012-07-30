@@ -15,57 +15,56 @@ class BaseField(object):
         self.help_text = help_text
         self.validators = validators
 
+    def __unicode__(self):
+        return u"`{n}` {t}".format(n=self.name, t=self.__class__)
+
+    def __repr__(self):
+        return self.__unicode__()
+
 
 class BooleanField(BaseField):
-    def __init__(self, *args, **kwargs):
-        super(BooleanField, self).__init__(*args, **kwargs)
+    pass
 
 
 class IntegerField(BaseField):
-    def __init__(self, *args, **kwargs):
-        super(IntegerField, self).__init__(*args, **kwargs)
+    pass
 
 
 class DateField(BaseField):
-    def __init__(self, *args, **kwargs):
-        super(DateField, self).__init__(*args, **kwargs)
+    pass
 
 
 class DateTimeField(BaseField):
-    def __init__(self, *args, **kwargs):
-        super(DateTimeField, self).__init__(*args, **kwargs)
+    pass
 
 
 class DecimalField(BaseField):
-    def __init__(self, *args, **kwargs):
-        super(DecimalField, self).__init__(*args, **kwargs)
+    pass
 
 
 class DictField(BaseField):
-    def __init__(self, *args, **kwargs):
-        super(DictField, self).__init__(*args, **kwargs)
+    pass
 
 
 class EmailField(BaseField):
-    def __init__(self, *args, **kwargs):
-        super(EmailField, self).__init__(*args, **kwargs)
+    pass
 
 
 class FunctionField(BaseField):
-    def __init__(self, *args, **kwargs):
-        super(FunctionField, self).__init__(*args, **kwargs)
+    pass
+
+
+class ListField(BaseField):
+    pass
 
 
 class ObjectField(BaseField):
-    def __init__(self, *args, **kwargs):
-        super(ObjectField, self).__init__(*args, **kwargs)
+    pass
 
 
 class StringField(BaseField):
-    def __init__(self, *args, **kwargs):
-        super(StringField, self).__init__(*args, **kwargs)
+    pass
 
 
 class TupleField(BaseField):
-    def __init__(self, *args, **kwargs):
-        super(TupleField, self).__init__(*args, **kwargs)
+    pass
