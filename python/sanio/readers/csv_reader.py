@@ -31,6 +31,16 @@ class CSVReader(BaseSanio):
         else:
             self.quoting = csv.QUOTE_ALL
 
+        # Make sure we cast `delimiter` to a str
+        if 'delimiter' in kwargs:
+            self.delimiter = str(kwargs['delimiter'])
+
+        # Make sure we cast `fieldnames` to a list of strs
+        if 'fieldnames' in kwargs:
+            self.fieldnames = [str(f) for f in kwargs['fieldnames']]
+        else:
+            self.fieldnames = None
+
     def __call__(self):
         return [i for i in self]
 
@@ -55,7 +65,7 @@ class CSVReader(BaseSanio):
 
     def next_generator(self):
         if self.data_source is not None:
-            for bit in csv.DictReader(self.data_source, delimiter=self.delimiter, quotechar=self.quotechar, quoting=self.quoting):
+            for bit in csv.DictReader(self.data_source, delimiter=self.delimiter, quotechar=self.quotechar, quoting=self.quoting, fieldnames=self.fieldnames):
                 yield bit
 
     def next(self):

@@ -23,7 +23,11 @@ class FileWriter(BaseWriter):
         with open(self.filename, "w") as fp:
             try:
                 for line in self.data_source:
-                    fp.write(self._clean(line))
+                    if isinstance(line, (dict,)):
+                        fp.write(self._clean(str(line)))
+                    else:
+                        fp.write(self._clean(line))
+
                     fp.write(os.linesep)
 
             except StopIteration:
