@@ -130,6 +130,10 @@ class StringCleaner(BaseSanio):
         return s.replace(key, value)
 
     @classmethod
+    def reverse(cls, s):
+        return s[::-1]
+
+    @classmethod
     def remove_null_bytes(cls, s):
         return s.replace('\x00', '')
 

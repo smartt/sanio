@@ -27,6 +27,10 @@ class TestStringCleaner(unittest.TestCase):
         self.assertEqual(StringCleaner.extract_numbers_safe('-3.14.25', decimals=True), '-3.14')
         self.assertEqual(StringCleaner.extract_numbers_safe('1,024'), '1024')
 
+    def test_reverse(self):
+        self.assertEqual(StringCleaner.reverse('Hi There'), 'erehT iH')
+        self.assertEqual(StringCleaner.reverse('1234.5678'), '8765.4321')
+
     def test_initial_caps(self):
         self.assertEqual(StringCleaner.initial_caps('Hi There'), 'Hi There')
         self.assertEqual(StringCleaner.initial_caps('hi there'), 'Hi There')
