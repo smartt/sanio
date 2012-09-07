@@ -235,6 +235,33 @@ class StringCleaner(BaseSanio):
         return cls.compress_whitespace(s)
 
     @classmethod
+    def strip_trailing_zeros(cls, s):
+        """
+        Return the string with and trailing zeros (and trailing decimal points) removed.
+        """
+        # Make sure there's a '.' in the string.
+        if s.find('.') < 0:
+            return s
+
+        # Reverse the string, then walk until we find a non-zero.
+        rev_str = StringCleaner.reverse(s)
+
+        last_index = -1
+        count = -1
+
+        for i in rev_str:
+            count += 1
+
+            if i == '0':
+                continue
+            else:
+                last_index = count
+                break
+
+        # Slice-off the zeros, re-reverse the string, and strip any trailing '.'s.
+        return StringCleaner.reverse(rev_str[last_index:]).rstrip('\.')
+
+    @classmethod
     def super_flat(cls, s):
         """
         Like an upper-case slug with no hyphens.

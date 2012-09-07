@@ -128,6 +128,19 @@ class TestStringCleaner(unittest.TestCase):
         self.assertEqual(StringCleaner.strip_tags('<p>oh hai.</p><p>goodbye</p>'), 'oh hai. goodbye')
         self.assertEqual(StringCleaner.strip_tags('<i>oh hai.</i><i>goodbye</i>'), 'oh hai.goodbye')
 
+    def test_strip_trailing_zeros(self):
+        self.assertEqual(StringCleaner.strip_trailing_zeros(''), '')
+        self.assertEqual(StringCleaner.strip_trailing_zeros('0'), '0')
+        self.assertEqual(StringCleaner.strip_trailing_zeros('0.0'), '0')
+        self.assertEqual(StringCleaner.strip_trailing_zeros('0.00'), '0')
+        self.assertEqual(StringCleaner.strip_trailing_zeros('0.000'), '0')
+        self.assertEqual(StringCleaner.strip_trailing_zeros('1.000'), '1')
+        self.assertEqual(StringCleaner.strip_trailing_zeros('1.100'), '1.1')
+        self.assertEqual(StringCleaner.strip_trailing_zeros('1.010'), '1.01')
+        self.assertEqual(StringCleaner.strip_trailing_zeros('1.001'), '1.001')
+        self.assertEqual(StringCleaner.strip_trailing_zeros('100.00'), '100')
+        self.assertEqual(StringCleaner.strip_trailing_zeros('100'), '100')
+
     def test_super_flat(self):
         self.assertEqual(StringCleaner.super_flat(''), '')
         self.assertEqual(StringCleaner.super_flat(None), '')
