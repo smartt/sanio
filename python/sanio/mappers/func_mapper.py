@@ -42,13 +42,15 @@ class FuncMapper(BaseSanio):
                 pass
 
         elif self.fn_map is not None:
-            try:
-                result = self.fn_map[key](value)
+            # Support fn_map[key] = func_ptr AND fn_map[key] = [func_prt, func_ptr, ...]
+            if key in self.fn_map:
+                if isinstance(self.fn_map[key], (list,)):
+                    result = value
 
-            except KeyError:
-                pass
+                    for fn in self.fn_map[key]:
+                        result = fn(result)
 
-            except TypeError:
-                pass
+                elif hasattr(self.fn_map[key], '__call__'):
+                    result = self.fn_map[key](value)
 
         return result
