@@ -46,5 +46,9 @@ class TestFuncMapper(unittest.TestCase):
         fm = FuncMapper(fn_map={'bar': [string.strip, string.upper]})
         self.assertEqual(fm.clean(key='bar', value='   hi there    '), 'HI THERE')
 
+    def test_g(self):
+        fm = FuncMapper(fn_map={'bar': []})
+        self.assertEqual(fm.clean(key='bar', value=' woot '), ' woot ')
+
 if __name__ == '__main__':
     unittest.main()
