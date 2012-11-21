@@ -152,6 +152,20 @@ class TestStringCleaner(unittest.TestCase):
         self.assertEqual(StringCleaner.upper('42'), '42')
         self.assertEqual(StringCleaner.upper(42), '42')
 
+    def test_lstripfirst(self):
+        self.assertEqual(StringCleaner.lstripfirst('foo_foo_bar', 'foo_'), 'foo_bar')
+        self.assertEqual(StringCleaner.lstripfirst('foo_bar', 'foo_'), 'bar')
+        self.assertEqual(StringCleaner.lstripfirst('foo_bar', 'foo_'), 'bar')
+        self.assertEqual(StringCleaner.lstripfirst('foo_bar'), 'foo_bar')
+        self.assertEqual(StringCleaner.lstripfirst(' foo_bar'), 'foo_bar')
+        self.assertEqual(StringCleaner.lstripfirst('  foo_bar'), 'foo_bar')
+        self.assertEqual(StringCleaner.lstripfirst('bar', 'foo_'), 'bar')
+        self.assertEqual(StringCleaner.lstripfirst('', 'foo_'), '')
+        self.assertEqual(StringCleaner.lstripfirst('', ''), '')
+        self.assertEqual(StringCleaner.lstripfirst('foo', ''), 'foo')
+        self.assertEqual(StringCleaner.lstripfirst('foo', ' '), 'foo')
+        self.assertEqual(StringCleaner.lstripfirst(' foo', ' '), 'foo')
+        self.assertEqual(StringCleaner.lstripfirst('  foo', ' '), ' foo')
 
 ## ---------------------
 if __name__ == "__main__":

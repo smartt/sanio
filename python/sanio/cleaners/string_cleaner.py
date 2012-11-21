@@ -72,8 +72,24 @@ class StringCleaner(BaseSanio):
         return str(s).lower()
 
     @classmethod
-    def lstrip(cls, s):
-        return s.lstrip()
+    def lstrip(cls, s, pattern=None):
+        return s.lstrip(pattern)
+
+    @classmethod
+    def lstripfirst(cls, s, pattern=None):
+        """
+        A normal <str>.lstrip() is greedy, making 'foo_foo_bar'.lstrip('foo_') == 'bar'
+
+        With this method, 'foo_foo_bar'.lstripfirst('foo_') == 'foo_bar'
+        """
+        if pattern is None or len(pattern) == 0:
+            return StringCleaner.lstrip(s)
+
+        if s.find(pattern) == 0:
+            return s[len(pattern):]
+
+        else:
+            return s
 
     @classmethod
     def price_like(cls, s):
