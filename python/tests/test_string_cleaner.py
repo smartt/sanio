@@ -51,6 +51,8 @@ class TestStringCleaner(unittest.TestCase):
         self.assertEqual(StringCleaner.price_like('19'), '19.00')
         self.assertEqual(StringCleaner.price_like('19.5.34'), '')
         self.assertEqual(StringCleaner.price_like('.19'), '0.19')
+        self.assertEqual(StringCleaner.price_like('$ 199.00'), '199.00')
+        self.assertEqual(StringCleaner.price_like('$\t199.00'), '199.00')
 
     def test_price_like_float(self):
         self.assertEqual(StringCleaner.price_like_float(''), None)
@@ -62,6 +64,8 @@ class TestStringCleaner(unittest.TestCase):
         self.assertEqual(StringCleaner.price_like_float('19'), 19.0)
         self.assertEqual(StringCleaner.price_like_float('19.5.34'), None)
         self.assertEqual(StringCleaner.price_like_float('.19'), 0.19)
+        self.assertEqual(StringCleaner.price_like_float('$ 199.00'), 199.00)
+        self.assertEqual(StringCleaner.price_like_float('$\t199.00'), 199.00)
 
     def test_safe_bool(self):
         self.assertTrue(StringCleaner.safe_bool('1'))
