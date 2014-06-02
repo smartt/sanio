@@ -1,4 +1,6 @@
-**SANIO IS A WORK IN PROGRESS THAT COULD EXPERIENCE MAJOR REFACTORING AND REDESIGN!! YMMV UNTIL IT STABALIZES **
+**I'm not currently maintaining this project. If you need simple text cleaning without the I/O chaining, you might like my other project: https://github.com/smartt/sanity**
+
+SANIO IS A WORK IN PROGRESS THAT COULD EXPERIENCE MAJOR REFACTORING AND REDESIGN!! YMMV UNTIL IT STABALIZES
 
 Possibly dependencies (depending on what you're doing):
 
@@ -6,7 +8,7 @@ Possibly dependencies (depending on what you're doing):
  - xlrd (for reading/writing Excel files.) I'm using something like 0.7.6.
 
 ## Sanio Tool Chain
-Sanio features a collection of tools for reformatting and translating input data into something more enjoyable to work with.  Furthermore, Sanio offers a pattern for extending these tools to add your own, unique steps to your data-processing pipeline.
+Sanio features a collection of "chainable" tools for reformatting and translating input data into something more enjoyable to work with.  Furthermore, Sanio offers a pattern for extending these tools to add your own, unique steps to your data-processing pipeline.
 
 At the core, every Sanio object (that inherits from BaseSanio) is a cleaner, filter, reader, validator, writer, and a data_source.  Because the tools all share common interfaces, they can be chained together.
 
